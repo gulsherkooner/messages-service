@@ -9,7 +9,8 @@ export const setupSocket = (httpServer) => {
     cors: {
       origin: '*',
       methods: ['GET', 'POST']
-    }
+    },
+    path: '/api/socket.io',
   });
 
   io.on('connection', (socket) => {
