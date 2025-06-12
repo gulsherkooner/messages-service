@@ -1,0 +1,19 @@
+services:
+  dating-service:
+    image: messages-service:${TAG:-latest}
+    build:
+      context: /root/cent-stage/messages-service
+      dockerfile: Dockerfile
+      cache_from:
+        - messages-service:cache
+    env_file:
+      - /root/cent-stage/messages-service/.env
+    ports:
+      - "3005:3005"
+    networks:
+      - cent-stage-network
+    restart: unless-stopped
+
+networks:
+  cent-stage-network:
+    external: true
