@@ -10,7 +10,7 @@ const router = express.Router();
 const upload = multer({ dest: 'uploads/' }); // or configure cloud storage later
 
 router.post(
-  '/upload-image',
+  'upload-image',
   upload.single('image'), // still works for both image/video
   async (req, res) => {
     try {
@@ -39,7 +39,7 @@ router.post(
 
 const audioUpload = multer({ dest: 'uploads/' });
 
-router.post('/upload-audio', audioUpload.single('audio'), async (req, res) => {
+router.post('upload-audio', audioUpload.single('audio'), async (req, res) => {
   try {
     const ext = '.webm';
     const oldPath = req.file.path;
@@ -54,8 +54,8 @@ router.post('/upload-audio', audioUpload.single('audio'), async (req, res) => {
   }
 });
 
-router.get('/conversation/:partnerId/:userId', getConversation);
-router.get('/unread-counts/:userId', getUnreadCounts);
-router.put('/mark-read/:fromId/:userId', markMessagesAsRead);
+router.get('conversation/:partnerId/:userId', getConversation);
+router.get('unread-counts/:userId', getUnreadCounts);
+router.put('mark-read/:fromId/:userId', markMessagesAsRead);
 
 export default router;
