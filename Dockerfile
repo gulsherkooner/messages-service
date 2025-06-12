@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # Expose port
-EXPOSE 3005
+EXPOSE 3007
 
 # Start the service
-CMD ["node", "index.js"]
+CMD ["node", "server.js"]

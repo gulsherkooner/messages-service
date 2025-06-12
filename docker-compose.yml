@@ -1,5 +1,5 @@
 services:
-  dating-service:
+  messages-service:
     image: messages-service:${TAG:-latest}
     build:
       context: /root/cent-stage/messages-service
@@ -9,7 +9,7 @@ services:
     env_file:
       - /root/cent-stage/messages-service/.env
     ports:
-      - "3006:3006"
+      - "3007:3007"
     networks:
       - cent-stage-network
     restart: unless-stopped
