@@ -10,7 +10,6 @@ export const setupSocket = (httpServer) => {
       origin: '*',
       methods: ['GET', 'POST']
     },
-    path: '/api/socket.io',
   });
 
   io.on('connection', (socket) => {

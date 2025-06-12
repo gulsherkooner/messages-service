@@ -9,7 +9,7 @@ services:
     env_file:
       - /root/cent-stage/messages-service/.env
     ports:
-      - "3005:3005"
+      - "3006:3006"
     networks:
       - cent-stage-network
     restart: unless-stopped
