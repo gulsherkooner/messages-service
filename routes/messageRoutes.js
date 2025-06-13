@@ -2,7 +2,7 @@ import express from 'express';
 import { getConversation } from '../controllers/messageController.js';
 import { getUnreadCounts } from '../controllers/messageController.js';
 import { markMessagesAsRead } from '../controllers/messageController.js';
-import { getLastMessages } from '../controllers/messages.controller.js';
+import { getLastMessages } from '../controllers/messageController.js';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
