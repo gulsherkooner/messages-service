@@ -2,6 +2,7 @@ import express from 'express';
 import { getConversation } from '../controllers/messageController.js';
 import { getUnreadCounts } from '../controllers/messageController.js';
 import { markMessagesAsRead } from '../controllers/messageController.js';
+import { getLastMessages } from '../controllers/messages.controller.js';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -56,6 +57,7 @@ router.post('/upload-audio', audioUpload.single('audio'), async (req, res) => {
 
 router.get('/conversation/:partnerId/:userId', getConversation);
 router.get('/unread-counts/:userId', getUnreadCounts);
+router.get('/last-messages/:userId', getLastMessages);
 router.put('/mark-read/:fromId/:userId', markMessagesAsRead);
 
 export default router;

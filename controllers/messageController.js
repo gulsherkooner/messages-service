@@ -63,3 +63,51 @@ export const getUnreadCounts = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch unread counts' });
   }
 };
+export const getLastMessages = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const messages = await Message.findAll({
+      attributes: [
+        [Sequelize.literal(`CASE WHEN sender = '${userId}' THEN receiver ELSE sender END`), 'contactId'],
+        [Sequelize.fn('MAX', Sequelize.col('timestamp')), 'lastTimestamp']
+      ],
+      where: {
+        [Op.or]: [
+          { sender: userId },
+          { receiver: userId }
+        ]
+      },
+      group: ['contactId'],
+      order: [[Sequelize.fn('MAX', Sequelize.col('timestamp')), 'DESC']]
+    });
+
+    // Fetch the actual last message text for each contact
+    const results = await Promise.all(
+      messages.map(async (entry) => {
+        const contactId = entry.get('contactId');
+        const lastMessage = await Message.findOne({
+          where: {
+            [Op.or]: [
+              { sender: userId, receiver: contactId },
+              { sender: contactId, receiver: userId }
+            ]
+          },
+          order: [['timestamp', 'DESC']],
+          limit: 1
+        });
+
+        return {
+          contactId,
+          lastMessage: lastMessage?.text || '',
+          timestamp: lastMessage?.timestamp || ''
+        };
+      })
+    );
+
+    res.json(results);
+  } catch (err) {
+    console.error('Error fetching last messages:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
