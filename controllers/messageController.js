@@ -1,6 +1,29 @@
 import { Op } from 'sequelize';
 import Sequelize from 'sequelize';
 import { Message } from '../models/index.js';
+// At the top
+import cloudinary from '../config/cloudinary.js';
+
+export const uploadMedia = async (req, res) => {
+  try {
+    const fileUrl = req.file.path; // Cloudinary-hosted URL
+    const mediaType = req.file.mimetype.startsWith('image/')
+      ? 'image'
+      : req.file.mimetype.startsWith('video/')
+      ? 'video'
+      : 'audio';
+
+    res.status(200).json({
+      url: fileUrl,
+      type: mediaType,
+      public_id: req.file.filename,
+    });
+  } catch (err) {
+    console.error('Cloudinary upload error:', err);
+    res.status(500).json({ error: 'Upload failed' });
+  }
+};
+
 export const getConversation = async (req, res) => {
   const { userId } = req.params; // from auth middleware
   const { partnerId } = req.params;
