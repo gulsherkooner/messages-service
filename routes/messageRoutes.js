@@ -11,7 +11,14 @@ import upload from '../middlewares/cloudinaryUpload.js';
 const router = express.Router();
 
 // 🔄 Upload to Cloudinary (supports image, video, audio)
-router.post('/upload-media', upload.single('file'), uploadMedia);
+router.post('/upload-media', upload.single('file'), (req, res, next) => {
+  if (!req.file) {
+    console.warn('⚠️ No file received by Cloudinary middleware');
+  } else {
+    console.log('✅ File received:', req.file.originalname);
+  }
+  next();
+}, uploadMedia);
 
 // 📨 Messaging routes
 router.get('/conversation/:partnerId/:userId', getConversation);
