@@ -27,33 +27,45 @@ export const addReaction = async (req, res) => {
   const { messageId } = req.params;
   const { emoji, userId } = req.body;
 
+  console.log('📥 Reaction endpoint hit');
+  console.log('➡️ Message ID:', messageId);
+  console.log('➡️ Emoji:', emoji);
+  console.log('➡️ User ID:', userId);
+
   try {
     const message = await Message.findByPk(messageId);
-    if (!message) return res.status(404).json({ error: 'Message not found' });
+    if (!message) {
+      console.log('❌ Message not found');
+      return res.status(404).json({ error: 'Message not found' });
+    }
 
     const currentReactions = message.reactions || {};
+    console.log('📦 Current reactions:', currentReactions);
 
-    // Initialize count or update
     if (!currentReactions[emoji]) {
       currentReactions[emoji] = [userId];
     } else if (!currentReactions[emoji].includes(userId)) {
       currentReactions[emoji].push(userId);
     } else {
-      // Toggle-off if already reacted
       currentReactions[emoji] = currentReactions[emoji].filter((id) => id !== userId);
       if (currentReactions[emoji].length === 0) {
         delete currentReactions[emoji];
       }
     }
 
+    console.log('✅ Final reactions to save:', currentReactions);
+
     await message.update({ reactions: currentReactions });
+
+    console.log('📝 Message updated successfully');
 
     res.status(200).json({ success: true, reactions: currentReactions });
   } catch (err) {
-    console.error('Reaction update error:', err);
+    console.error('🔥 Reaction update error:', err);
     res.status(500).json({ error: 'Failed to update reactions' });
   }
 };
+
 export const getConversation = async (req, res) => {
   const { userId } = req.params; // from auth middleware
   const { partnerId } = req.params;
