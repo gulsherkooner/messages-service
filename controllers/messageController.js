@@ -47,7 +47,7 @@ export const addReaction = async (req, res) => {
     } else if (!currentReactions[emoji].includes(userId)) {
       currentReactions[emoji].push(userId);
     } else {
-      currentReactions[emoji] = currentReactions[emoji].filter((id) => id !== userId);
+      currentReactions[emoji] = currentReactions[emoji].filter(id => id !== userId);
       if (currentReactions[emoji].length === 0) {
         delete currentReactions[emoji];
       }
@@ -55,16 +55,20 @@ export const addReaction = async (req, res) => {
 
     console.log('✅ Final reactions to save:', currentReactions);
 
-    await message.update({ reactions: currentReactions });
+    // ✅ FIX: Use set + save
+    message.set({ reactions: currentReactions });
+    await message.save();
+    await message.reload();
 
-    console.log('📝 Message updated successfully');
+    console.log('📦 Saved reactions:', message.reactions);
 
-    res.status(200).json({ success: true, reactions: currentReactions });
+    res.status(200).json({ success: true, reactions: message.reactions });
   } catch (err) {
     console.error('🔥 Reaction update error:', err);
     res.status(500).json({ error: 'Failed to update reactions' });
   }
 };
+
 
 export const getConversation = async (req, res) => {
   const { userId } = req.params; // from auth middleware
