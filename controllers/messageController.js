@@ -23,7 +23,37 @@ export const uploadMedia = async (req, res) => {
     res.status(500).json({ error: 'Upload failed' });
   }
 };
+export const addReaction = async (req, res) => {
+  const { messageId } = req.params;
+  const { emoji, userId } = req.body;
 
+  try {
+    const message = await Message.findByPk(messageId);
+    if (!message) return res.status(404).json({ error: 'Message not found' });
+
+    const currentReactions = message.reactions || {};
+
+    // Initialize count or update
+    if (!currentReactions[emoji]) {
+      currentReactions[emoji] = [userId];
+    } else if (!currentReactions[emoji].includes(userId)) {
+      currentReactions[emoji].push(userId);
+    } else {
+      // Toggle-off if already reacted
+      currentReactions[emoji] = currentReactions[emoji].filter((id) => id !== userId);
+      if (currentReactions[emoji].length === 0) {
+        delete currentReactions[emoji];
+      }
+    }
+
+    await message.update({ reactions: currentReactions });
+
+    res.status(200).json({ success: true, reactions: currentReactions });
+  } catch (err) {
+    console.error('Reaction update error:', err);
+    res.status(500).json({ error: 'Failed to update reactions' });
+  }
+};
 export const getConversation = async (req, res) => {
   const { userId } = req.params; // from auth middleware
   const { partnerId } = req.params;

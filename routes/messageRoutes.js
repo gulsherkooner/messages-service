@@ -7,8 +7,11 @@ import {
   uploadMedia,
 } from '../controllers/messageController.js';
 import upload from '../middlewares/cloudinaryUpload.js';
+import { addReaction } from '../controllers/messageController.js';
 
 const router = express.Router();
+
+router.post('/:messageId/react', addReaction);
 
 // 🔄 Upload to Cloudinary (supports image, video, audio)
 router.post('/upload-media', upload.single('file'), (req, res, next) => {

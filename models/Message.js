@@ -23,6 +23,10 @@ const Message = sequelize.define('Message', {
     type: DataTypes.ENUM('sent', 'delivered', 'read'),
     defaultValue: 'sent',
   },
+  reactions: {
+    type: DataTypes.JSONB, // Use JSONB for Postgres, JSON for MySQL
+    defaultValue: {},
+  },
   timestamp: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
