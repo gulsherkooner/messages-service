@@ -55,8 +55,9 @@ export const addReaction = async (req, res) => {
 
     console.log('✅ Final reactions to save:', currentReactions);
 
-    // ✅ FIX: Use set + save
+    // ✅ Force Sequelize to detect change
     message.set({ reactions: currentReactions });
+    message.changed('reactions', true); // 🔥 this is the key line
     await message.save();
     await message.reload();
 
@@ -68,7 +69,6 @@ export const addReaction = async (req, res) => {
     res.status(500).json({ error: 'Failed to update reactions' });
   }
 };
-
 
 export const getConversation = async (req, res) => {
   const { userId } = req.params; // from auth middleware
