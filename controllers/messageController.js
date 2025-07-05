@@ -180,3 +180,21 @@ export const getLastMessages = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+export const deleteMessage = async (req, res) => {
+  const { messageId } = req.params;
+
+  try {
+    const deleted = await Message.destroy({
+      where: { id: messageId },
+    });
+
+    if (deleted === 0) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
+    return res.status(200).json({ success: true, message: 'Message deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting message:', err);
+    return res.status(500).json({ error: 'Failed to delete message' });
+  }
+};

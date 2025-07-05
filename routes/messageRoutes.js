@@ -8,10 +8,13 @@ import {
 } from '../controllers/messageController.js';
 import upload from '../middlewares/cloudinaryUpload.js';
 import { addReaction } from '../controllers/messageController.js';
+import { deleteMessage } from '../controllers/messageController.js';
 
 const router = express.Router();
 
 router.post('/:messageId/react', addReaction);
+
+router.delete('/:messageId', deleteMessage);
 
 // 🔄 Upload to Cloudinary (supports image, video, audio)
 router.post('/upload-media', upload.single('file'), (req, res, next) => {
